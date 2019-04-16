@@ -13,7 +13,7 @@ spi = busio.SPI(clock=board.SCK, MOSI=board.MOSI)
 latch = digitalio.DigitalInOut(board.D5)
 tlc5947 = adafruit_tlc5947.TLC5947(spi,latch)
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='../front_end/build/static', template_folder='../front_end/build')
 CORS(app)
 
 candle_states = [0] * 24
@@ -31,7 +31,7 @@ def checkForChange():
             return True
     return False        
 
-
+# Not in use. Can be used if you wanted to stream the data. However I couldn't get it to work with waitress
 @app.route("/stream")
 def stream():
     print(request.remote_addr)
@@ -49,7 +49,7 @@ def get_states():
 
 @app.route("/")
 def render_page():
-    return "Hello World!"
+    return  render_template('index.html')
 
 @app.route("/switch", methods= ["POST"])
 def switch_led():
